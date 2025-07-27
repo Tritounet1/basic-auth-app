@@ -11,10 +11,10 @@ function login(req: any, res: any) {
     return;
   }
 
-  const user = getUser(email, password);
+  const token = getUser(email, password);
 
   res.send({
-    token: '...',
+    token: token,
   });
 }
 
@@ -27,10 +27,10 @@ function register(req: any, res: any) {
     return;
   }
 
-  const user = createUser(email, password);
+  const token = createUser(email, password);
 
   res.send({
-    token: '...',
+    token: token,
   });
 }
 
