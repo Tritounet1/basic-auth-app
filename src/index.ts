@@ -1,53 +1,6 @@
 import client from "./client";
 import express from "express";
-import { createUser, getUser } from "./user";
-
-async function login(req: any, res: any) {
-  if (!req.body) {
-    res.send("Route excepted email and password.");
-    return;
-  }
-
-  const email = req.body.email;
-  const password = req.body.password;
-
-  if (!email || !password) {
-    res.send("Route excepted email and password.");
-    return;
-  }
-
-  const token = await getUser(email, password);
-
-  if (!token) {
-    res.send("Invalid email or password.");
-    return;
-  }
-
-  res.send({
-    token: token,
-  });
-}
-
-async function register(req: any, res: any) {
-  if (!req.body) {
-    res.send("Route excepted email and password.");
-    return;
-  }
-
-  const email = req.body.email;
-  const password = req.body.password;
-
-  if (!email || !password) {
-    res.send("Route excepted email and password.");
-    return;
-  }
-
-  const token = await createUser(email, password);
-
-  res.send({
-    token: token,
-  });
-}
+import { login, me, register, authMiddleware } from "./routes";
 
 const app = express();
 const port = 3000;
@@ -56,6 +9,8 @@ app.use(express.json());
 
 app.post("/login", login);
 app.post("/register", register);
+
+app.get("/me", authMiddleware, me);
 
 app.listen(port, () => {
   console.log(`App listening on port ${port}!`);
