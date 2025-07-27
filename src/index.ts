@@ -2,7 +2,7 @@ import client from "./client"
 import express from 'express'
 import { createUser, getUser } from "./user";
 
-function login(req: any, res: any) {
+async function login(req: any, res: any) {
   const email = req.body.email;
   const password = req.body.password;
   
@@ -11,14 +11,14 @@ function login(req: any, res: any) {
     return;
   }
 
-  const token = getUser(email, password);
+  const token = await getUser(email, password);
 
   res.send({
     token: token,
   });
 }
 
-function register(req: any, res: any) {
+async function register(req: any, res: any) {
   const email = req.body.email;
   const password = req.body.password;
   
@@ -27,7 +27,7 @@ function register(req: any, res: any) {
     return;
   }
 
-  const token = createUser(email, password);
+  const token = await createUser(email, password);
 
   res.send({
     token: token,
@@ -58,8 +58,7 @@ process.on('SIGTERM', async () => {
   process.exit(0);
 });
 
-process.on('uncaughtException', async (err) => {
-  console.error('Uncaught exception:', err);
+process.on('unhandledRejection', async (reason, promise) => {
   await client.$disconnect();
   process.exit(1);
 });

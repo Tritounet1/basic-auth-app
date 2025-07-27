@@ -21,7 +21,7 @@ export async function createUser(email: string, password: string): Promise<strin
   
 export async function getUser(email: string, password: string): Promise<string | null> {
     const user = await client.user.findUnique({where: {email: email}})
-    if(user) {
+    if(!user) {
         return null; // TODO: return error : user not found
     }
     if(!validPassword(password, user!.password)) {
