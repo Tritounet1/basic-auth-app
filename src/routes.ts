@@ -19,6 +19,10 @@ export async function home(req: Request, res: Response) {
           response: {},
           data: {},
         },
+        history: {
+          response: {},
+          data: {},
+        }
       },
       POST: {
         login: {
