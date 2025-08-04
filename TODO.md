@@ -1,3 +1,3 @@
 - Remplacer les any par les vrai types
 - Créer des tests sur les routes
-- Gestion des erreurs plus profonde (try, catch)
+- Gestion des erreurs plus profonde sur les appels du client prisma (try, catch)

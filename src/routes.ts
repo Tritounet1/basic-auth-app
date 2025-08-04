@@ -1,6 +1,29 @@
 import { decode } from "./utils";
 import { getUser, createUser } from "./user";
 
+export async function home(req: any, res: any) {
+  res.send({
+    routes: {
+      GET: {
+        me: {
+          response: {},
+          data: {},
+        },
+      },
+      POST: {
+        login: {
+          response: {},
+          data: {},
+        },
+        register: {
+          response: {},
+          data: {},
+        },
+      },
+    },
+  });
+}
+
 export async function login(req: any, res: any) {
   if (!req.body) {
     res.send("Route excepted email and password.");
