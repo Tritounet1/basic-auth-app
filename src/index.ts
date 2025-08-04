@@ -1,18 +1,19 @@
 import client from "./client";
 import express from "express";
-import { login, me, register, authMiddleware, home } from "./routes";
+import { login, me, register, authMiddleware, historyMiddleware, home, history } from "./routes";
 
 const app = express();
 const port = 3000;
 
 app.use(express.json());
 
-app.get("/", home);
+app.get("/", [historyMiddleware], home);
 
-app.post("/login", login);
-app.post("/register", register);
+app.post("/login", [historyMiddleware], login);
+app.post("/register", [historyMiddleware], register);
 
-app.get("/me", [authMiddleware] , me);
+app.get("/me", [authMiddleware, historyMiddleware] , me);
+app.get("/history", [authMiddleware, historyMiddleware] , history)
 
 app.listen(port, '0.0.0.0', () => {
   console.log(`App listening on port ${port}!`);

@@ -15,4 +15,19 @@ model User {
   id      Int      @id @default(autoincrement())
   email   String   @unique
   password    String
+  
+  history History[]
+}
+
+model History {
+  id        Int      @id @default(autoincrement())
+  userId    Int?
+  method    String   // GET, POST, PUT, DELETE, etc.
+  path      String   // /login, /register, /me, etc.
+  status    Int      // 200, 404, 500, etc.
+  ip        String?  // Adresse IP de l'utilisateur
+  userAgent String?  // User-Agent du navigateur
+  timestamp DateTime @default(now())
+  
+  user      User?    @relation(fields: [userId], references: [id])
 }

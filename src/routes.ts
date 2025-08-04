@@ -1,7 +1,17 @@
 import { decode } from "./utils";
 import { getUser, createUser } from "./user";
+import { Request, Response, NextFunction } from 'express';
+import { saveToHistory, getHistory } from "./history";
 
-export async function home(req: any, res: any) {
+declare global {
+  namespace Express {
+    interface Request {
+      user?: any;
+    }
+  }
+}
+
+export async function home(req: Request, res: Response) {
   res.send({
     routes: {
       GET: {
@@ -24,7 +34,7 @@ export async function home(req: any, res: any) {
   });
 }
 
-export async function login(req: any, res: any) {
+export async function login(req: Request, res: Response) {
   if (!req.body) {
     res.send("Route excepted email and password.");
     return;
@@ -50,7 +60,7 @@ export async function login(req: any, res: any) {
   });
 }
 
-export async function register(req: any, res: any) {
+export async function register(req: Request, res: Response) {
   if (!req.body) {
     res.send("Route excepted email and password.");
     return;
@@ -76,13 +86,13 @@ export async function register(req: any, res: any) {
   });
 }
 
-export async function me(req: any, res: any) {
+export async function me(req: Request, res: Response) {
   res.send({
     me: req.user,
   });
 }
 
-export const authMiddleware = (req: any, res: any, next: any) => {
+export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
   const token = req.headers.authorization;
 
   if (!token) {
@@ -98,3 +108,16 @@ export const authMiddleware = (req: any, res: any, next: any) => {
   req.user = decoded;
   next();
 };
+
+export const historyMiddleware = (req: Request, res: Response, next: NextFunction) => {  
+  res.on('finish', async() => {
+    await saveToHistory(req?.user?.id || null, req.method, req.path, res.statusCode, req.ip || "", req.get('user-agent') || "")
+  });
+
+  next();
+}
+
+export const history = async(req: Request, res: Response, next: NextFunction) => {  
+  const history = await getHistory();
+  res.send(history)
+}
